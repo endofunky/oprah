@@ -72,4 +72,43 @@ module Fixtures
     presents_many :comments
     presents_one :owner
   end
+
+  module KotakDocument
+    def self.included(am_bas)
+      am_bas.extend ClassMethods
+    end
+
+    module ClassMethods
+      def field(name)
+        generated_fields.module_eval do
+          define_method(name) { name.to_s.upcase }
+        end
+      end
+
+      # From
+      #  https://github.com/mongodb/mongoid/blob/6.0-contexts/lib/mongoid/fields.rb#L540
+      def generated_fields
+        @generated_fields ||= begin
+          mod = Module.new
+          include(mod)
+          mod
+        end
+      end
+    end
+  end
+
+  # Instance of this class will have eigenclass in the ancestors.
+  #
+  # Example:
+  #   > doc = EigenKotak.new
+  #   > doc.class.ancestors
+  #      => [Fixtures::EigenKotak, #<Module:0x007f927cbde370>,
+  #   > doc.class.ancestors.map(&:name)
+  #      => ["Fixtures::EigenKotak", nil, "Fixtures::KotakDocument", ...
+  #
+  class EigenKotak
+    include KotakDocument
+    field :name
+  end
+
 end

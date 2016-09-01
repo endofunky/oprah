@@ -98,9 +98,7 @@ module Oprah
     end
 
     def test_present_eigenclass
-      klass = Struct.new(:name)
-      klass.define_singleton_method(:hi) {"foobar"}
-      assert_equal "foobar", present(klass).hi
+      assert_equal "NAME", present(EigenKotak.new).name
     end
 
     def test_default_view_context_using_present
