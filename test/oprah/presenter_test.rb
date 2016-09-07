@@ -97,6 +97,10 @@ module Oprah
       assert_equal "foobar", present(User.new).foo
     end
 
+    def test_present_eigenclass
+      assert_equal "NAME", present(EigenKotak.new).name
+    end
+
     def test_default_view_context_using_present
       presenter = Presenter.present(User.new)
       assert_kind_of ActionView::Context, presenter.view_context
